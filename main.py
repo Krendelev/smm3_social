@@ -28,6 +28,10 @@ except KeyError as error:
 load_dotenv()
 try:
     vk.post_to_group(post)
+except requests.HTTPError as error:
+    logging.error(error)
+
+try:
     fb.post_to_group(post)
 except requests.HTTPError as error:
     logging.error(error)

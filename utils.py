@@ -2,15 +2,11 @@ import os
 import argparse
 
 
-def get_extension(filename):
-    return filename.split(".")[-1]
-
-
 def get_post(directory):
-    formats = {"jpg": "img", "png": "img", "gif": "img", "txt": "txt"}
+    formats = {".jpg": "img", ".png": "img", ".gif": "img", ".txt": "txt"}
     file_names = [name for name in os.listdir(directory) if not name.startswith(".")]
     post = {
-        formats[get_extension(name)]: os.path.join(directory, name)
+        formats[os.path.splitext(name)[1]]: os.path.join(directory, name)
         for name in file_names
     }
     return post

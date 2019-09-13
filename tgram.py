@@ -7,8 +7,9 @@ import utils
 
 def post_to_channel(post):
     bot = telegram.Bot(os.environ["TELEGRAM_TOKEN"])
-    bot.send_message(chat_id=os.environ["CHANNEL_ID"], text=open(post["txt"]).read())
-    bot.send_photo(chat_id=os.environ["CHANNEL_ID"], photo=open(post["img"], "rb"))
+    with open(post["txt"]) as text, open(post["img"], "rb") as photo:
+        bot.send_photo(chat_id=os.environ["CHANNEL_ID"], photo=photo)
+        bot.send_message(chat_id=os.environ["CHANNEL_ID"], text=text.read())
     return None
 
 

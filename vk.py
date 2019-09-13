@@ -13,44 +13,43 @@ def check_vk_response(response):
 
 def get_upload_url(payload):
     url = "https://api.vk.com/method/photos.getWallUploadServer"
-    payload.update({"group_id": os.environ["VK_GROUP_ID"]})
-    response = requests.get(url, params=payload).json()
+    params = {**payload, "group_id": os.environ["VK_GROUP_ID"]}
+    response = requests.get(url, params=params).json()
     check_vk_response(response)
     return response["response"]["upload_url"]
 
 
 def upload_picture(url, file_path):
-    files = {"photo": open(file_path, "rb")}
-    response = requests.post(url, files=files).json()
+    with open(file_path, "rb") as fh:
+        files = {"photo": fh}
+        response = requests.post(url, files=files).json()
     return response
 
 
 def save_picture(payload, upload_info):
     url = "https://api.vk.com/method/photos.saveWallPhoto"
-    payload.update(
-        {
-            "group_id": os.environ["VK_GROUP_ID"],
-            "server": upload_info["server"],
-            "photo": upload_info["photo"],
-            "hash": upload_info["hash"],
-        }
-    )
-    response = requests.post(url, params=payload).json()
+    params = {
+        **payload,
+        "group_id": os.environ["VK_GROUP_ID"],
+        "server": upload_info["server"],
+        "photo": upload_info["photo"],
+        "hash": upload_info["hash"],
+    }
+    response = requests.post(url, params=params).json()
     check_vk_response(response)
     return response["response"][0]
 
 
 def post_to_wall(payload, pic_info, message):
     url = "https://api.vk.com/method/wall.post"
-    payload.update(
-        {
-            "owner_id": f"-{os.environ['VK_GROUP_ID']}",
-            "from_group": 1,
-            "message": open(message).read(),
-            "attachments": f"photo{pic_info['owner_id']}_{pic_info['id']}",
-        }
-    )
-    response = requests.get(url, params=payload).json()
+    params = {
+        **payload,
+        "owner_id": f"-{os.environ['VK_GROUP_ID']}",
+        "from_group": 1,
+        "message": open(message).read(),
+        "attachments": f"photo{pic_info['owner_id']}_{pic_info['id']}",
+    }
+    response = requests.get(url, params=params).json()
     check_vk_response(response)
     return None
 
