@@ -19,10 +19,10 @@ def get_upload_url(payload):
     return response["response"]["upload_url"]
 
 
-def upload_picture(url, file_path):
-    with open(file_path, "rb") as fh:
-        files = {"photo": fh}
-        response = requests.post(url, files=files).json()
+def upload_picture(url, image):
+    files = {"photo": image}
+    response = requests.post(url, files=files).json()
+    check_vk_response(response)
     return response
 
 
@@ -46,7 +46,7 @@ def post_to_wall(payload, pic_info, message):
         **payload,
         "owner_id": f"-{os.environ['VK_GROUP_ID']}",
         "from_group": 1,
-        "message": open(message).read(),
+        "message": message,
         "attachments": f"photo{pic_info['owner_id']}_{pic_info['id']}",
     }
     response = requests.get(url, params=params).json()
@@ -57,9 +57,10 @@ def post_to_wall(payload, pic_info, message):
 def post_to_group(post):
     payload = {"access_token": os.environ["VK_ACCESS_TOKEN"], "v": 5.101}
     upload_url = get_upload_url(payload)
-    upload_info = upload_picture(upload_url, post["img"])
-    picture_info = save_picture(payload, upload_info)
-    post_to_wall(payload, picture_info, post["txt"])
+    with open(post["txt"]) as text, open(post["img"], "rb") as photo:
+        upload_info = upload_picture(upload_url, photo)
+        picture_info = save_picture(payload, upload_info)
+        post_to_wall(payload, picture_info, text.read())
     return None
 
 

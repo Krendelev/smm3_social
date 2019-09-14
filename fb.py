@@ -7,12 +7,10 @@ import utils
 
 def post_to_group(post):
     url = f"https://graph.facebook.com/{os.environ['FB_GROUP_ID']}/photos"
-    params = {
-        "caption": open(post["txt"]).read(),
-        "access_token": os.environ["FB_MARKER"],
-    }
-    with open(post["img"], "rb") as fh:
-        files = {"source": fh}
+
+    with open(post["txt"]) as text, open(post["img"], "rb") as photo:
+        params = {"caption": text.read(), "access_token": os.environ["FB_MARKER"]}
+        files = {"source": photo}
         response = requests.post(url, params=params, files=files)
     response.raise_for_status()
     return None
