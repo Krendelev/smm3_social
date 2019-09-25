@@ -1,8 +1,10 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8f52980688da44b195bdd1f4d66de65c)](https://www.codacy.com/manual/Krendelev/smm3_social?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Krendelev/smm3_social&amp;utm_campaign=Badge_Grade)
+
 # Social media poster
 
 Post to [VKontakte](https://vk.com), [Facebook](https://facebook.com) and [Telegram](https://telegram.org/) all at once.
 
-### How to install
+## How to install
 
 Python3 should be already installed.
 Then use `pip` (or `pip3`, if there is a conflict with Python2) to install dependencies:
